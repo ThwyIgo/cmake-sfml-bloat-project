@@ -1,0 +1,35 @@
+{ lib
+, stdenv
+, callPackage
+, cmake
+, sfml
+, boost182
+}:
+
+stdenv.mkDerivation {
+  # Use `nix-build --tarball-ttl 0` if you don't want to wait 1h to fetchGit again
+  pname = "@PROJECT_NAME@";
+  version = "@PROJECT_VERSION@";
+  src = builtins.fetchGit {
+    url = ../.git;
+    shallow = true;
+    ref = "main";
+  };
+
+  nativeBuildInputs = [ cmake ];
+  buildInputs = [ sfml boost182 ];
+
+  cmakeFlags = [
+    "-DfetchSFML=OFF"
+    "-DfetchBoost=OFF"
+    "-DUSE_RELATIVE_PATHS=ON"
+  ];
+
+  meta = with lib; {
+    homepage = "@PROJECT_HOMEPAGE_URL@";
+    description = "@PROJECT_DESCRIPTION@";
+    license = licenses.free;
+    mainProgram = @EXECUTABLE_NAME@; # Executable name
+    platforms = platforms.linux;
+  };
+}

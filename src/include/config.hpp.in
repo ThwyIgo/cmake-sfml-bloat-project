@@ -1,0 +1,12 @@
+#pragma once
+
+#include <boost/dll/runtime_symbol_info.hpp>
+#include <filesystem>
+
+#define PROJECT_VERSION "@PROJECT_VERSION@"
+#define SYSTEM_NAME "@CMAKE_SYSTEM_NAME@"
+
+/* DATA_PATH is relative to install location. PWD isn't necessarily the install location when the program is
+ * launched. */
+const std::filesystem::path DATA_PATH =
+    boost::dll::program_location().parent_path().generic_string() / static_cast<std::filesystem::path>("@DATA_PATH@");

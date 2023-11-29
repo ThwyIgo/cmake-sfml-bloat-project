@@ -1,0 +1,223 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "x64-debug-linux",
+      "displayName": "Linux x64 Debug",
+      "description": "Linux debug (64 bits)",
+      "inherits": "linux-base",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    },
+    {
+      "name": "x64-release-linux",
+      "displayName": "Linux x64 Release",
+      "description": "Linux (64 bits)",
+      "inherits": "x64-debug-linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": false
+      }
+    },
+    {
+      "name": "wsl-debug",
+      "displayName": "Linux WSL Debug",
+      "description": "WSL (Windows Subsystem for Linux) or remote Linux debug (Visual Studio)",
+      "inherits": "linux-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
+    },
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug",
+      "description": "Remote macOS debug (Visual Studio)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
+    },
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "x64-debug-windows",
+      "displayName": "x64 Debug",
+      "description": "Windows debug (64 bits)",
+      "inherits": "windows-base",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    },
+    {
+      "name": "x64-release-windows",
+      "displayName": "x64 Release",
+      "description": "Windows (64 bits)",
+      "inherits": "x64-debug-windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": false,
+        "SUBSYSTEM_LINKER_OPTIONS": "/SUBSYSTEM:WINDOWS;/ENTRY:mainCRTStartup"
+      }
+    },
+    {
+      "name": "x64-install-windows",
+      "displayName": "x64 Install",
+      "description": "Configure preset made to be used with cpack",
+      "inherits": "x64-release-windows",
+      "cacheVariables": {
+        "USE_RELATIVE_PATHS": "ON"
+      }
+    },
+    {
+      "name": "x86-debug-windows",
+      "displayName": "x86 Debug",
+      "description": "Windows debug (32 bits)",
+      "inherits": "windows-base",
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    },
+    {
+      "name": "x86-release-windows",
+      "displayName": "x86 Release",
+      "description": "Windows (32 bits)",
+      "inherits": "x86-debug-windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": false,
+        "SUBSYSTEM_LINKER_OPTIONS": "/SUBSYSTEM:WINDOWS;/ENTRY:mainCRTStartup"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64-debug-linux",
+      "displayName": "x64 Debug",
+      "configurePreset": "x64-debug-linux",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "x64-release-linux",
+      "displayName": "x64 Release",
+      "configurePreset": "x64-release-linux",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "x64-debug-windows",
+      "displayName": "x64 Debug",
+      "configurePreset": "x64-debug-windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "x64-release-windows",
+      "displayName": "x64 Release",
+      "configurePreset": "x64-release-windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "x64-install-windows",
+      "displayName": "x64 Install",
+      "configurePreset": "x64-install-windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "x64-WIX",
+      "description": ".msi installer generated with WIX toolset",
+      "configurePreset": "x64-install-windows",
+      "configurations": [
+        "x64-release-windows"
+      ],
+      "generators": [
+        "WIX"
+      ],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ]
+}
