@@ -1,3 +1,5 @@
+let sfmlAllModules = [ "audio" "graphics" "window" "network" ];
+in
 { lib
 , stdenv
 , fetchFromGitHub
@@ -12,8 +14,11 @@
 , libXrandr
 , libXrender
 , udev
+# SFML modules that will be built
+, sfmlModules ? sfmlAllModules
 }:
 
+lib.checkListOfEnum "sfml: Modules" sfmlAllModules sfmlModules
 stdenv.mkDerivation rec {
   pname = "sfml";
   version = "2.6.1";
@@ -42,9 +47,14 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DSFML_INSTALL_PKGCONFIG_FILES=TRUE"
     "-DSFML_USE_SYSTEM_DEPS=TRUE"
-  ];
+  ] ++
+  builtins.map (m: "-DSFML_BUILD_" + lib.toUpper m +
+                   (if builtins.elem m sfmlModules
+                    then "=TRUE"
+                    else "=FALSE")
+  ) sfmlAllModules;
 
-  # Fix to https://github.com/jtojnar/cmake-snips
+  # Fix to https://github.com/jtojnar/cmake-snips#concatenating-paths-when-building-pkg-config-files
   prePatch = "sed -i 's/@CMAKE_INSTALL_LIBDIR@/lib/' tools/pkg-config/*.pc.in";
 
   meta = with lib; {
