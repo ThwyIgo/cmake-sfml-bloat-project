@@ -47,15 +47,15 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DSFML_INSTALL_PKGCONFIG_FILES=TRUE"
     "-DSFML_USE_SYSTEM_DEPS=TRUE"
+
+    # Fix to https://github.com/jtojnar/cmake-snips#concatenating-paths-when-building-pkg-config-files
+    "-DCMAKE_INSTALL_LIBDIR=lib"
   ] ++
   builtins.map (m: "-DSFML_BUILD_" + lib.toUpper m +
                    (if builtins.elem m sfmlModules
                     then "=TRUE"
                     else "=FALSE")
   ) sfmlAllModules;
-
-  # Fix to https://github.com/jtojnar/cmake-snips#concatenating-paths-when-building-pkg-config-files
-  prePatch = "sed -i 's/@CMAKE_INSTALL_LIBDIR@/lib/' tools/pkg-config/*.pc.in";
 
   meta = with lib; {
     homepage = "https://www.sfml-dev.org/";

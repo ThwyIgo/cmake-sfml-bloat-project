@@ -45,7 +45,7 @@ cmake --build out --config Release
 Building the project in any of the above ways will fetch SFML and Boost source code
 and compile it. It will also set the =data/= directory location to an absolute
 path, so the generated executable won't be portable. If you're interested in
-sharing a pre-built binary, you'll problably need to pass some options to cmake
+sharing a pre-built binary, you'll probably need to pass some options to cmake
 on the command line or use =CMakePresets.json=.
 
 *** CMake options for this project
@@ -165,7 +165,7 @@ set =Cmake: Copy Compile Commands= to =compile_commands.json= if
 you're using CMake Tools and clangd.
 
 * License
-All files in this repo are licenced under WTFPL (see LICENSE file).
+All files in this repository are licensed under WTFPL (see LICENSE file).
 
 This work is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
