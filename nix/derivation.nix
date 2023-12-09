@@ -7,14 +7,16 @@
 }:
 
 stdenv.mkDerivation {
-  # Use `nix-build --tarball-ttl 0` if you don't want to wait 1h to fetchGit again
   pname = "MyProject";
   version = "0.0.1";
-  src = builtins.fetchGit {
-    url = ../.git;
-    shallow = true;
-    ref = "main";
-  };
+  # Don't include result and out directories in the derivation.
+  src = builtins.filterSource
+    (path: type: !(builtins.elem type [ "directory" "symlink" ] &&
+                   builtins.elem (baseNameOf path) [
+                     "result"
+                     "out"
+                   ]))
+    ../.;
 
   nativeBuildInputs = [ cmake ];
   buildInputs = [ sfml boost182 ];
