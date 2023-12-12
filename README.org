@@ -46,7 +46,7 @@ Building the project in any of the above ways will fetch SFML and Boost source c
 and compile it. It will also set the =data/= directory location to an absolute
 path, so the generated executable won't be portable. If you're interested in
 sharing a pre-built binary, you'll probably need to pass some options to cmake
-on the command line or use =CMakePresets.json=.
+on the command line or use [[*CMakePresets.json][CMakePresets.json]].
 
 *** CMake options for this project
 | Option             | Description                                               | Default |
@@ -61,6 +61,14 @@ If you set on =USE_RELATIVE_PATHS=, keep in mind that files in the data folder
 are copied to the output directory only when installing the project, i.e. if you
 build, but don't install the project, DATA_PATH will be an invalid path.
 
+*** Additional notes on project building
+External libraries will be fetched by default. Note that if you're on Linux,
+SFML require [[https://www.sfml-dev.org/tutorials/2.6/compile-with-cmake.php#installing-dependencies][it's dependencies]] to be installed.
+
+Another option is to turn =fetchX= option OFF and install that dependency
+through your package manager. Make sure you install the correct version of it.
+You can check which version is needed by searching for it in CMakeLists.txt.
+
 ** CMakePresets.json
 This file contains CMake presets that define options, variables, output and install
 directories. You can use them like this:
@@ -68,6 +76,7 @@ directories. You can use them like this:
 cmake --preset x64-debug-linux
 cmake --build --preset x64-debug-linux
 #+end_src
+Some IDEs list these presets as Configure / Build "configurations" in their GUI.
 
 ** default.nix
 This is the file that is read automatically by ~nix-build~ on Linux. Nix is a
