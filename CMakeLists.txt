@@ -110,19 +110,21 @@ set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_BINARY_DIR}/LICENSE.txt)
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "Author name")
 set(CPACK_PACKAGE_EXECUTABLES "${EXECUTABLE_NAME}" "installedExecutableName")
-#set(CPACK_PACKAGE_ICON "${PROJECT_SOURCE_DIR}/data/icon.png")
+set(CPACK_PACKAGE_ICON "${PROJECT_SOURCE_DIR}/data/icon.png")
 set(CPACK_SOURCE_IGNORE_FILES ${PROJECT_SOURCE_DIR}/.git/
     ${CMAKE_BINARY_DIR}/ ${PROJECT_BINARY_DIR}/
 )
 
 # WIX (MSI)
-#set(CPACK_WIX_PRODUCT_ICON ${CPACK_PACKAGE_ICON})
+set(CPACK_WIX_PRODUCT_ICON ${CPACK_PACKAGE_ICON})
 set(CPACK_WIX_PROGRAM_MENU_FOLDER ".")
 
 include(CPack)
 
 # Nix
-option(NIX "Generate nix files" OFF)
-if (NIX)
-  configure_file("${PROJECT_SOURCE_DIR}/nix/derivation.nix.in" "${PROJECT_SOURCE_DIR}/nix/derivation.nix" @ONLY)
+option(CONFIG_PACKAGING "Generate packaging files" OFF)
+if (CONFIG_PACKAGING)
+  configure_file("${PROJECT_SOURCE_DIR}/tools/nix/derivation.nix.in" "${PROJECT_SOURCE_DIR}/tools/nix/derivation.nix" @ONLY)
+  configure_file("${PROJECT_SOURCE_DIR}/tools/appimage/app.desktop.in" "${PROJECT_SOURCE_DIR}/tools/appimage/${PROJECT_NAME}.desktop" @ONLY)
+  configure_file("${PROJECT_SOURCE_DIR}/tools/appimage/Dockerfile.in" "${PROJECT_SOURCE_DIR}/tools/appimage/Dockerfile" @ONLY)
 endif()

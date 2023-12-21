@@ -2,7 +2,7 @@
 
 This template is a little more bloated than [[https://github.com/SFML/cmake-sfml-project][cmake-sfml-project]]. It should help
 you to manage runtime assets (such as sprites and audio), create a Windows
-installer and a Nix derivation.
+installer, a Nix derivation and an AppImage.
 
 I test this template on Linux and Windows, though it *might* work on MacOS.
 
@@ -54,8 +54,8 @@ on the command line or use [[*CMakePresets.json][CMakePresets.json]].
 | fetchSFML          | Download and compile SFML automatically                   | ON      |
 | fetchBoost         | Download and compile Boost automatically                  | ON      |
 | USE_RELATIVE_PATHS | Set some variables as relative paths to install directory | OFF     |
-| NIX                | Generate nix files                                        | OFF     |
 | BUILD_SHARED_LIBS  | Build shared libraries                                    | ON      |
+| CONFIG_PACKAGING   | Generate packaging files                                  | OFF     |
 
 If you set on =USE_RELATIVE_PATHS=, keep in mind that files in the data folder
 are copied to the output directory only when installing the project, i.e. if you
@@ -87,11 +87,11 @@ This is the file that is read automatically by ~nix-shell~ on Linux. Nix shell
 provides a development environment with all the dependencies installed. Try
 opening your text editor or IDE inside nix-shell and see how easy it is!
 
-* Generating Nix files
-Nix files can be generated at the configure step by setting =NIX= option to
-=ON=. For example:
+* Generating packaging files
+Packaging files can be generated at the configure step by setting
+=CONFIG_PACKAGING= option to =ON=. For example:
 #+begin_src shell
-cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DNIX=ON
+cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DCONFIG_PACKAGING=ON
 #+end_src
 Generated files are based on =.in= files, e.g. =nix/derivation.nix= is generated
 by =nix/derivation.nix.in=.
@@ -144,7 +144,7 @@ db_file("Useful message", myInt);
 db_line("Useful message", myInt, var1, var2, var3);
 #+end_src
 
-* Generating an installer
+* Generating an installer / package
 ** Windows MSI
 1. Install Visual Studio Build Tools
    #+begin_src shell
@@ -164,6 +164,16 @@ db_line("Useful message", myInt, var1, var2, var3);
     cmake --preset x64-install-windows && cmake --build --preset x64-install-windows && cpack --preset x64-WIX
     #+end_src
 5. The directory where the .msi was generated will be informed in the command output
+
+** Linux AppImage
+1. Install docker
+2. Choose in =./tools/appimage/Dockerfile.in= if =BUILD_SHARED_LIBS= should be ON or OFF
+   (also check other cmake flags)
+3. ~cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DCONFIG_PACKAGING=ON~
+4. Execute commands commented at the bottom of =./tools/appimage/Dockerfile=
+
+You can open an interactive shell inside the docker container with
+~docker run -ti --rm -v $PWD:/source -w /source myproject-appimage bash~
 
 * IDE / text editor integration
 Some IDEs / text editors have CMake support. The easiest ones to use are [[https://visualstudio.microsoft.com/][Visual

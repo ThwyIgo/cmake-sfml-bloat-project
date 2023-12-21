@@ -475,3 +475,7 @@ src/include/config.hpp
 
 # Clangd cache
 .cache/
+
+# AppImage
+*AppDir/
+*.AppImage

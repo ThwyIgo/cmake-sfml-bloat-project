@@ -1,9 +1,9 @@
 { pkgs ? import <nixpkgs> {} }:
-let sfml = (pkgs.callPackage ./nix/sfml.nix {});
+let sfml = (pkgs.callPackage ./tools/nix/sfml.nix {});
 in
 pkgs.mkShell {
   inputsFrom = [
-    (pkgs.callPackage ./nix/derivation.nix { })
+    (pkgs.callPackage ./tools/nix/derivation.nix { })
     sfml
   ];
 

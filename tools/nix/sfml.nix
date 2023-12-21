@@ -26,8 +26,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "SFML";
     repo = "SFML";
-    rev = version;
-    sha256 = "sha256-R+ULgaKSPadcPNW4D2/jlxMKHc1L9e4FprgqLRuyZk4=";
+    rev = "872faccc972d91d8e8080201a1806614c975c146";
+    sha256 = "sha256-24oC8xzXaxB+695rm9HxrgsVv+LsVQbKuiOEqTMw8X4=";
   };
 
   nativeBuildInputs = [ cmake ];
@@ -47,9 +47,6 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DSFML_INSTALL_PKGCONFIG_FILES=TRUE"
     "-DSFML_USE_SYSTEM_DEPS=TRUE"
-
-    # Fix to https://github.com/jtojnar/cmake-snips#concatenating-paths-when-building-pkg-config-files
-    "-DCMAKE_INSTALL_LIBDIR=lib"
   ] ++
   builtins.map (m: "-DSFML_BUILD_" + lib.toUpper m +
                    (if builtins.elem m sfmlModules

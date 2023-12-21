@@ -1,3 +1,3 @@
 { pkgs ? import <nixpkgs> {} }:
 
-pkgs.callPackage ./nix/derivation.nix { sfml = pkgs.callPackage ./nix/sfml.nix {}; }
+pkgs.callPackage ./tools/nix/derivation.nix { sfml = pkgs.callPackage ./tools/nix/sfml.nix {}; }

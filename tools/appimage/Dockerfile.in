@@ -1,0 +1,33 @@
+# syntax=docker/dockerfile:1
+
+FROM debian:stable-slim
+RUN apt update && apt install -y \
+    build-essential cmake git \
+    # AppImage
+    wget file \
+    # SFML dependencies
+    libxrandr-dev \
+    libxcursor-dev \
+    libudev-dev \
+    libopenal-dev \
+    libflac-dev \
+    libvorbis-dev \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libdrm-dev \
+    libgbm-dev \
+    libfreetype-dev
+
+RUN wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage \
+    -O /bin/linuxdeploy.AppImage && \
+    chmod +x /bin/linuxdeploy.AppImage
+
+CMD export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:AppDir/usr/lib && \
+    cmake --preset x64-release-linux -DBUILD_SHARED_LIBS=ON -DUSE_RELATIVE_PATHS=ON && \
+    cmake --build --preset x64-release-linux -j$(nproc --all) && \
+    cmake --install out/build/x64-release-linux/ --prefix=AppDir/usr && \
+    rm -rf AppDir/usr/include && \
+    linuxdeploy.AppImage --appimage-extract-and-run --appdir AppDir --output appimage -d tools/appimage/@PROJECT_NAME@.desktop -i data/icon.png
+
+# docker build -t myproject-appimage tools/appimage/
+# docker run --rm -v $PWD:/source -w /source myproject-appimage

@@ -7,16 +7,18 @@
 }:
 
 stdenv.mkDerivation {
-  pname = "@PROJECT_NAME@";
-  version = "@PROJECT_VERSION@";
+  pname = "MyProject";
+  version = "0.0.1";
   # Don't include result and out directories in the derivation.
   src = builtins.filterSource
     (path: type: !(builtins.elem type [ "directory" "symlink" ] &&
                    builtins.elem (baseNameOf path) [
                      "result"
                      "out"
+                     ".git"
+                     "tools"
                    ]))
-    ../.;
+    ../../.;
 
   nativeBuildInputs = [ cmake ];
   buildInputs = [ sfml boost182 ];
@@ -28,10 +30,10 @@ stdenv.mkDerivation {
   ];
 
   meta = with lib; {
-    homepage = "@PROJECT_HOMEPAGE_URL@";
-    description = "@PROJECT_DESCRIPTION@";
+    homepage = "https://example.com";
+    description = "My description";
     license = licenses.free;
-    mainProgram = @EXECUTABLE_NAME@; # Executable name
+    mainProgram = MyProject; # Executable name
     platforms = platforms.linux;
   };
 }
