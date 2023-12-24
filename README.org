@@ -7,12 +7,12 @@ installer, a Nix derivation and an AppImage.
 I test this template on Linux and Windows, though it *might* work on MacOS.
 
 * Structure of the project
-| Directory    | Description      |
-|--------------+------------------|
-| src/         | C++ source files |
-| src/include/ | C++ header files |
-| data/        | Runtime assets   |
-| nix/         | Nix files        |
+| Directory    | Description                                         |
+|--------------+-----------------------------------------------------|
+| src/         | C++ source files                                    |
+| src/include/ | C++ header files                                    |
+| data/        | Runtime assets                                      |
+| tools/       | Tools that help with project building and packaging |
 
 * Understanding what each file does
 
@@ -87,15 +87,6 @@ This is the file that is read automatically by ~nix-shell~ on Linux. Nix shell
 provides a development environment with all the dependencies installed. Try
 opening your text editor or IDE inside nix-shell and see how easy it is!
 
-* Generating packaging files
-Packaging files can be generated at the configure step by setting
-=CONFIG_PACKAGING= option to =ON=. For example:
-#+begin_src shell
-cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DCONFIG_PACKAGING=ON
-#+end_src
-Generated files are based on =.in= files, e.g. =nix/derivation.nix= is generated
-by =nix/derivation.nix.in=.
-
 * Including files
 Files located in =src/include/= are already in the include search path, so you
 can just ~#include "file.hpp".~
@@ -145,6 +136,14 @@ db_line("Useful message", myInt, var1, var2, var3);
 #+end_src
 
 * Generating an installer / package
+Packaging files can be generated at the configure step by setting
+=CONFIG_PACKAGING= option to =ON=. For example:
+#+begin_src shell
+cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DCONFIG_PACKAGING=ON
+#+end_src
+Generated files are based on =.in= files, e.g. =nix/derivation.nix= is generated
+by =nix/derivation.nix.in=.
+
 ** Windows MSI
 1. Install Visual Studio Build Tools
    #+begin_src shell
@@ -166,11 +165,11 @@ db_line("Useful message", myInt, var1, var2, var3);
 5. The directory where the .msi was generated will be informed in the command output
 
 ** Linux AppImage
-1. Install docker
-2. Choose in =./tools/appimage/Dockerfile.in= if =BUILD_SHARED_LIBS= should be ON or OFF
-   (also check other cmake flags)
-3. ~cmake -S . -B out -DfetchSFML=OFF -DfetchBoost=OFF -DCONFIG_PACKAGING=ON~
-4. Execute commands commented at the bottom of =./tools/appimage/Dockerfile=
+1. Install [[https://www.docker.com/][docker]]
+2. Check CMake flags in =./tools/appimage/Dockerfile.in=
+3. Generate packaging files
+4. ~docker build -t myproject-appimage tools/appimage/~
+5. ~docker run --rm -v $PWD:/source -w /source myproject-appimage~
 
 You can open an interactive shell inside the docker container with
 ~docker run -ti --rm -v $PWD:/source -w /source myproject-appimage bash~

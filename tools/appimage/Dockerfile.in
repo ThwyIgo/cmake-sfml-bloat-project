@@ -28,6 +28,3 @@ CMD export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:AppDir/usr/lib && \
     cmake --install out/build/x64-release-linux/ --prefix=AppDir/usr && \
     rm -rf AppDir/usr/include && \
     linuxdeploy.AppImage --appimage-extract-and-run --appdir AppDir --output appimage -d tools/appimage/@PROJECT_NAME@.desktop -i data/icon.png
-
-# docker build -t myproject-appimage tools/appimage/
-# docker run --rm -v $PWD:/source -w /source myproject-appimage

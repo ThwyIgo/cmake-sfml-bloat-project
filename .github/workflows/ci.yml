@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: ${{ matrix.platform.name }}
+    runs-on: ${{ matrix.platform.os }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+      matrix:
+        platform:
+        - { name: Windows,     os: windows-latest, flags: -DUSE_RELATIVE_PATHS=ON  }
+        - { name: Linux GCC,   os: ubuntu-latest,  flags: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DUSE_RELATIVE_PATHS=ON }
+        - { name: Linux Clang, os: ubuntu-latest,  flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DUSE_RELATIVE_PATHS=ON }
+
+    steps:
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: >
+        cmake ${{ matrix.platform.flags }}
+        -S . -B build
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_INSTALL_PREFIX=install
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Install
+      run: cmake --install build --config Release

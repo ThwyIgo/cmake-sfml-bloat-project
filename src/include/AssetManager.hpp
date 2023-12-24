@@ -12,7 +12,7 @@ class AssetManager {
     AssetManager() = delete;
 
     // Load and get a shared SFML asset with T::loadFromFile()
-    static T& Get(std::filesystem::path filePath, std::filesystem::path BasePath = DATA_PATH) {
+    static T& get(std::filesystem::path filePath, std::filesystem::path BasePath = DATA_PATH) {
         std::filesystem::path file = BasePath / filePath;
 
         try {
@@ -25,7 +25,7 @@ class AssetManager {
     }
 
     // Free a shared SFML asset
-    static void Free(std::filesystem::path filePath, std::filesystem::path BasePath = DATA_PATH) {
+    static void free(std::filesystem::path filePath, std::filesystem::path BasePath = DATA_PATH) {
         cache.erase(BasePath / filePath);
     }
 };

@@ -121,7 +121,6 @@ set(CPACK_WIX_PROGRAM_MENU_FOLDER ".")
 
 include(CPack)
 
-# Nix
 option(CONFIG_PACKAGING "Generate packaging files" OFF)
 if (CONFIG_PACKAGING)
   configure_file("${PROJECT_SOURCE_DIR}/tools/nix/derivation.nix.in" "${PROJECT_SOURCE_DIR}/tools/nix/derivation.nix" @ONLY)
