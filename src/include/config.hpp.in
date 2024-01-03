@@ -9,4 +9,5 @@
 
 /* DATA_PATH is relative to install location. PWD isn't necessarily the install location when the program is
  * launched. */
-const std::filesystem::path DATA_PATH = (boost::dll::program_location().parent_path() / "@DATA_PATH@").generic_string();
+const std::filesystem::path DATA_PATH =
+    boost::dll::program_location().parent_path().generic_string() / static_cast<std::filesystem::path>("@DATA_PATH@");

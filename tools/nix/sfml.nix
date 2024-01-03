@@ -19,7 +19,7 @@ in
 }:
 
 lib.checkListOfEnum "sfml: Modules" sfmlAllModules sfmlModules
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "sfml";
   version = "2.6.1";
 
