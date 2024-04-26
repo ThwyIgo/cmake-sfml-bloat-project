@@ -219,5 +219,43 @@
         "rhs": "Windows"
       }
     }
+  ],
+  "testPresets": [
+    {
+      "name": "x64-debug-linux",
+      "configurePreset" : "x64-debug-linux",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "x64-release-linux",
+      "configurePreset" : "x64-release-linux",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "x64-debug-windows",
+      "configurePreset" : "x64-debug-windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "x64-release-windows",
+      "configurePreset" : "x64-release-windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
   ]
 }

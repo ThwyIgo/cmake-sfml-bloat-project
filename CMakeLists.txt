@@ -7,7 +7,7 @@ project(MyProject
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 # Put all binaries in the same directory, including DLLs.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
@@ -30,7 +30,7 @@ option(fetchBoost "Download and compile Boost automatically" ON)
 set(BOOST_VERSION 1.82.0)
 if(fetchBoost)
   message(STATUS "Fetching Boost")
-  set(BOOST_INCLUDE_LIBRARIES dll)
+  set(BOOST_INCLUDE_LIBRARIES dll test)
   include(FetchContent)
   FetchContent_Declare(Boost
     URL https://github.com/boostorg/boost/releases/download/boost-${BOOST_VERSION}/boost-${BOOST_VERSION}.tar.xz
@@ -41,7 +41,7 @@ if(fetchBoost)
 else()
   # Boost::dll is a header-only library that depends on Boost::filesystem
   find_package(Boost ${BOOST_VERSION} REQUIRED
-    COMPONENTS headers filesystem) # Won't work if BOOST_VERSION is below 1.82.0
+    COMPONENTS headers filesystem unit_test_framework) # Won't work if BOOST_VERSION is below 1.82.0
 endif()
 
 # Set DATA_PATH
@@ -58,13 +58,20 @@ endif()
 
 #### ADD EXECUTABLE ####
 
+# Make everything except the entrypoint a library, so we can link it to test.
+set(EXECUTABLE_ENTRY_POINT "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 file(GLOB SRCS CONFIGURE_DEPENDS
-  "${PROJECT_SOURCE_DIR}/src/*.cpp"
-  "${PROJECT_SOURCE_DIR}/src/include/*.h*")
-add_executable(${EXECUTABLE_NAME} ${SRCS})
-target_include_directories(${EXECUTABLE_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src/include")
-configure_file("${PROJECT_SOURCE_DIR}/src/include/config.hpp.in" "${PROJECT_SOURCE_DIR}/src/include/config.hpp" @ONLY)
-target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_std_20)
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/*.h*")
+list(REMOVE_ITEM SRCS ${EXECUTABLE_ENTRY_POINT})
+add_library(${PROJECT_NAME}_lib ${SRCS})
+target_include_directories(${PROJECT_NAME}_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
+target_compile_features(${PROJECT_NAME}_lib PUBLIC cxx_std_20)
+
+add_executable(${EXECUTABLE_NAME} ${SRCS} ${EXECUTABLE_ENTRY_POINT})
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${PROJECT_NAME}_lib)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.hpp" @ONLY)
 # Defined in CMakePresets.json
 target_link_options(${EXECUTABLE_NAME} PRIVATE ${SUBSYSTEM_LINKER_OPTIONS})
 
@@ -76,6 +83,11 @@ if(fetchBoost)
 else()
   target_link_libraries(${EXECUTABLE_NAME} PRIVATE Boost::headers Boost::filesystem)
 endif()
+
+#### TESTING ####
+
+enable_testing()
+add_subdirectory("${PROJECT_SOURCE_DIR}/test")
 
 #### PLATFORM SPECIFIC ####
 

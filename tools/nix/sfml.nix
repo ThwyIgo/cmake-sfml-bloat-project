@@ -21,13 +21,13 @@ in
 lib.checkListOfEnum "sfml: Modules" sfmlAllModules sfmlModules
 stdenv.mkDerivation {
   pname = "sfml";
-  version = "2.6.1";
+  version = "2.6.2-unreleased";
 
   src = fetchFromGitHub {
     owner = "SFML";
     repo = "SFML";
-    rev = "872faccc972d91d8e8080201a1806614c975c146";
-    sha256 = "sha256-24oC8xzXaxB+695rm9HxrgsVv+LsVQbKuiOEqTMw8X4=";
+    rev = "b0e25088a291772fad8364372bcff9728512579c";
+    sha256 = "sha256-aAAdSxWJqBgjzcD4GTLMABDqp8cmqoyIedGLWVRgcqA=";
   };
 
   nativeBuildInputs = [ cmake ];

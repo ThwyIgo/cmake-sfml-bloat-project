@@ -13,6 +13,7 @@ I test this template on Linux and Windows, though it *might* work on MacOS.
 | src/include/ | C++ header files                                    |
 | data/        | Runtime assets                                      |
 | tools/       | Tools that help with project building and packaging |
+| test/        | C++ tests with CTest                                |
 
 * Understanding what each file does
 
@@ -75,6 +76,7 @@ directories. You can use them like this:
 #+begin_src shell
 cmake --preset x64-debug-linux
 cmake --build --preset x64-debug-linux
+ctest --preset x64-debug-linux
 #+end_src
 Some IDEs list these presets as Configure / Build "configurations" in their GUI.
 
