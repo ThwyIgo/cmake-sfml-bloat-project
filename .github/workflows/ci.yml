@@ -17,29 +17,29 @@ jobs:
 
       matrix:
         platform:
-        - { name: Windows,     os: windows-latest, preset: x64-release-windows, flags:  }
-        - { name: Linux GCC,   os: ubuntu-latest,  preset: x64-release-linux,   flags: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ }
-        - { name: Linux Clang, os: ubuntu-latest,  preset: x64-release-linux,   flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+        - { name: Windows,     os: windows-latest, preset: x64-release-windows, cc: cl.exe, cxx: cl.exe  }
+        - { name: Linux GCC,   os: ubuntu-latest,  preset: x64-release-linux,   cc: gcc,    cxx: g++ }
+        - { name: Linux Clang, os: ubuntu-latest,  preset: x64-release-linux,   cc: clang,  cxx: clang++ }
 
     steps:
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
 
+    - name: Setup Ninja
+      if: runner.os == 'Windows'
+      uses: ashutoshvarma/setup-ninja@master
+
     - uses: actions/checkout@v4
 
-    - name: Configure CMake
-      run: >
-        cmake --preset ${{ matrix.platform.preset }}
-        ${{ matrix.platform.flags }}
-        -B build
-        -DCMAKE_INSTALL_PREFIX=install
-
-    - name: Build
-      run: cmake --build build --config Release
-
-    - name: Test
-      run: ctest --test-dir build
-
-    - name: Install
-      run: cmake --install build --config Release
+    - name: Build & Test
+      uses: ashutoshvarma/action-cmake-build@master
+      with:
+        build-dir: ${{ runner.workspace }}/build
+        cc: ${{ matrix.platform.cc }}
+        cxx: ${{ matrix.platform.cxx }}
+        configure-options: --preset ${{ matrix.platform.preset }}
+        run-test: true
+        # USE_RELATIVE_PATHS is OFF, but let's install anyway
+        install-build: true
+        parallel: 3

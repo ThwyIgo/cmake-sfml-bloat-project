@@ -77,11 +77,11 @@ target_link_options(${EXECUTABLE_NAME} PRIVATE ${SUBSYSTEM_LINKER_OPTIONS})
 
 #### LINK LIBRARIES ####
 
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE sfml-graphics)
+target_link_libraries(${PROJECT_NAME}_lib PUBLIC sfml-graphics)
 if(fetchBoost)
-  target_link_libraries(${EXECUTABLE_NAME} PRIVATE Boost::dll)
+  target_link_libraries(${PROJECT_NAME}_lib PUBLIC Boost::dll)
 else()
-  target_link_libraries(${EXECUTABLE_NAME} PRIVATE Boost::headers Boost::filesystem)
+  target_link_libraries(${PROJECT_NAME}_lib PUBLIC Boost::headers Boost::filesystem)
 endif()
 
 #### TESTING ####
