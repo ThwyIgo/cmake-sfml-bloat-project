@@ -162,7 +162,7 @@ by =nix/derivation.nix.in=.
 4. Generate the installer
     #+begin_src shell
     cd "C:\path\to\project\root"
-    cmake --preset x64-install-windows && cmake --build --preset x64-install-windows && cpack --preset x64-WIX
+    cmake --preset x64-release-windows -DUSE_RELATIVE_PATHS=ON && cmake --build --preset x64-release-windows && cpack --preset x64-WIX
     #+end_src
 5. The directory where the .msi was generated will be informed in the command output
 

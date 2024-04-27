@@ -15,6 +15,6 @@ foreach(testSrc ${TEST_SRCS})
     RUNTIME_OUTPUT_DIRECTORY ${TEST_BIN})
   # Finally add it to test execution
   add_test(NAME ${testName}
-    WORKING_DIRECTORY ${TEST_BIN}
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMMAND ${TEST_BIN}/${testName})
 endforeach(testSrc)

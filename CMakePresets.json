@@ -116,15 +116,6 @@
       }
     },
     {
-      "name": "x64-install-windows",
-      "displayName": "x64 Install",
-      "description": "Configure preset made to be used with cpack",
-      "inherits": "x64-release-windows",
-      "cacheVariables": {
-        "USE_RELATIVE_PATHS": "ON"
-      }
-    },
-    {
       "name": "x86-debug-windows",
       "displayName": "x86 Debug",
       "description": "Windows debug (32 bits)",
@@ -190,23 +181,13 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       }
-    },
-    {
-      "name": "x64-install-windows",
-      "displayName": "x64 Install",
-      "configurePreset": "x64-install-windows",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
     }
   ],
   "packagePresets": [
     {
       "name": "x64-WIX",
       "description": ".msi installer generated with WIX toolset",
-      "configurePreset": "x64-install-windows",
+      "configurePreset": "x64-release-windows",
       "configurations": [
         "x64-release-windows"
       ],
