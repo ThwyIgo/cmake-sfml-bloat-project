@@ -64,7 +64,7 @@ file(GLOB SRCS CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/include/*.h*")
 list(REMOVE_ITEM SRCS ${EXECUTABLE_ENTRY_POINT})
-add_library(${PROJECT_NAME}_lib ${SRCS})
+add_library(${PROJECT_NAME}_lib STATIC ${SRCS})
 target_include_directories(${PROJECT_NAME}_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
 target_compile_features(${PROJECT_NAME}_lib PUBLIC cxx_std_20)
 

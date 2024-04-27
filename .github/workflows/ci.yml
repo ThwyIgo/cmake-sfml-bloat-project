@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -17,9 +17,9 @@ jobs:
 
       matrix:
         platform:
-        - { name: Windows,     os: windows-latest, flags: -DUSE_RELATIVE_PATHS=ON  }
-        - { name: Linux GCC,   os: ubuntu-latest,  flags: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DUSE_RELATIVE_PATHS=ON }
-        - { name: Linux Clang, os: ubuntu-latest,  flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DUSE_RELATIVE_PATHS=ON }
+        - { name: Windows,     os: windows-latest, preset: x64-release-windows, flags:  }
+        - { name: Linux GCC,   os: ubuntu-latest,  preset: x64-release-linux,   flags: -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ }
+        - { name: Linux Clang, os: ubuntu-latest,  preset: x64-release-linux,   flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
 
     steps:
     - name: Install Linux Dependencies
@@ -30,13 +30,16 @@ jobs:
 
     - name: Configure CMake
       run: >
-        cmake ${{ matrix.platform.flags }}
-        -S . -B build
-        -DCMAKE_BUILD_TYPE=Release
+        cmake --preset ${{ matrix.platform.preset }}
+        ${{ matrix.platform.flags }}
+        -B build
         -DCMAKE_INSTALL_PREFIX=install
 
     - name: Build
       run: cmake --build build --config Release
+
+    - name: Test
+      run: ctest --test-dir build
 
     - name: Install
       run: cmake --install build --config Release
