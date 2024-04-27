@@ -17,7 +17,7 @@ jobs:
 
       matrix:
         platform:
-        - { name: Windows,     os: windows-latest, preset: x64-release-windows, cc: cl.exe, cxx: cl.exe  }
+        - { name: Windows,     os: windows-latest, preset: x64-release-windows -UCMAKE_CXX_COMPILER -UCMAKE_C_COMPILER, cc: , cxx: }
         - { name: Linux GCC,   os: ubuntu-latest,  preset: x64-release-linux,   cc: gcc,    cxx: g++ }
         - { name: Linux Clang, os: ubuntu-latest,  preset: x64-release-linux,   cc: clang,  cxx: clang++ }
 
