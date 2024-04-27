@@ -26,9 +26,9 @@ jobs:
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
 
-    - name: Setup Ninja
+    - name: Get latest CMake and Ninja
       if: runner.os == 'Windows'
-      uses: ashutoshvarma/setup-ninja@master
+      uses: lukka/get-cmake@latest
 
     - uses: actions/checkout@v4
 

@@ -1,8 +1,8 @@
 #+LANGUAGE: en
 
 This template is a little more bloated than [[https://github.com/SFML/cmake-sfml-project][cmake-sfml-project]]. It should help
-you to manage runtime assets (such as sprites and audio), create a Windows
-installer, a Nix derivation and an AppImage.
+you to write tests, manage runtime assets (such as sprites and audio), create a
+Windows installer, a Nix derivation and an AppImage.
 
 I test this template on Linux and Windows, though it *might* work on MacOS.
 
